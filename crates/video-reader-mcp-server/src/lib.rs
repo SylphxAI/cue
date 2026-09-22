@@ -1,5 +1,6 @@
 pub mod http_transport;
 pub mod read_video;
+pub mod search_video;
 pub mod tool_routes;
 mod family_envelope;
 pub mod video_evidence;
@@ -26,7 +27,7 @@ impl FreeformToolArgs {
 }
 
 pub const SERVER_NAME: &str = "cue";
-pub const SERVER_VERSION: &str = "0.2.1";
+pub const SERVER_VERSION: &str = "0.3.0";
 pub const SERVER_INSTRUCTIONS: &str =
     "Evidence-first video reader MCP server (Rust rmcp transport). Use read_video for ffprobe timelines and video_evidence for render_frame or crop_frame follow-ups without per-frame vision LLM.";
 
@@ -53,6 +54,16 @@ impl VideoReaderMcp {
         Parameters(args): Parameters<FreeformToolArgs>,
     ) -> Result<rmcp::model::CallToolResult, ErrorData> {
         read_video::read_video(args.into_value())
+    }
+
+    #[tool(
+        description = "Search embedded subtitles and transcripts and return timestamped matches."
+    )]
+    fn search_video(
+        &self,
+        Parameters(args): Parameters<FreeformToolArgs>,
+    ) -> Result<rmcp::model::CallToolResult, ErrorData> {
+        search_video::search_video(args.into_value())
     }
 
     #[tool(
@@ -91,6 +102,7 @@ mod tests {
         let names: Vec<_> = tools.iter().map(|tool| tool.name.to_string()).collect();
         assert!(names.contains(&"read_video".to_string()));
         assert!(names.contains(&"video_evidence".to_string()));
+        assert!(names.contains(&"search_video".to_string()));
     }
 
     #[test]

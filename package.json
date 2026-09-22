@@ -1,8 +1,8 @@
 {
   "name": "@sylphx/cue",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "mcpName": "io.github.SylphxAI/cue",
-  "description": "Cue \u2014 timeline proof for agents. Local video evidence (ffprobe, subtitles, scenes) via MCP/CLI/SDK. Not frame-by-frame VLM.",
+  "description": "Cue — video answers with timestamp-level proof. Local-first timelines, subtitles, scenes, and frame evidence.",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -24,9 +24,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SylphxAI/video-reader-mcp.git"
+    "url": "git+https://github.com/SylphxAI/cue.git"
   },
-  "homepage": "https://github.com/SylphxAI/video-reader-mcp#readme",
+  "homepage": "https://sylphxai.github.io/cue/",
   "keywords": [
     "mcp",
     "model-context-protocol",
@@ -60,7 +60,10 @@
     "benchmark:release-gate": "bun scripts/release-gate.ts",
     "benchmark:public-proof": "bun scripts/public-proof.ts",
     "brand:pack-plan": "bun scripts/brand-pack-plan.ts",
-    "compose:iris": "bun scripts/compose-iris.ts"
+    "compose:iris": "bun scripts/compose-iris.ts",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
@@ -72,14 +75,15 @@
     "@changesets/cli": "^2.31.0",
     "@types/bun": "^1.2.19",
     "@types/node": "^25.9.1",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitepress": "1.6.4"
   },
   "packageManager": "bun@1.4.0",
   "private": false,
   "optionalDependencies": {
-    "@sylphx/cue-darwin-arm64": "0.2.1",
-    "@sylphx/cue-darwin-x64": "0.2.1",
-    "@sylphx/cue-linux-x64-gnu": "0.2.1",
-    "@sylphx/cue-linux-arm64-gnu": "0.2.1"
+    "@sylphx/cue-darwin-arm64": "0.3.0",
+    "@sylphx/cue-darwin-x64": "0.3.0",
+    "@sylphx/cue-linux-x64-gnu": "0.3.0",
+    "@sylphx/cue-linux-arm64-gnu": "0.3.0"
   }
 }

@@ -8,13 +8,13 @@ pub enum ToolRoute {
 
 pub fn route_for_tool(tool: &str) -> Option<ToolRoute> {
     match tool {
-        "read_video" | "video_evidence" => Some(ToolRoute::RustCore),
+        "read_video" | "search_video" | "video_evidence" => Some(ToolRoute::RustCore),
         _ => None,
     }
 }
 
 /// Public MCP tools (tools/list).
-pub const PUBLIC_TOOLS: [&str; 2] = ["read_video", "video_evidence"];
+pub const PUBLIC_TOOLS: [&str; 3] = ["read_video", "search_video", "video_evidence"];
 
 #[cfg(test)]
 mod tests {
@@ -23,6 +23,7 @@ mod tests {
     #[test]
     fn maps_only_public_tools() {
         assert_eq!(route_for_tool("read_video"), Some(ToolRoute::RustCore));
+        assert_eq!(route_for_tool("search_video"), Some(ToolRoute::RustCore));
         assert_eq!(route_for_tool("video_evidence"), Some(ToolRoute::RustCore));
         assert_eq!(route_for_tool("hash_source"), None);
         assert_eq!(route_for_tool("build_cache_key"), None);
@@ -32,7 +33,7 @@ mod tests {
     }
 
     #[test]
-    fn public_surface_is_two_tools() {
-        assert_eq!(PUBLIC_TOOLS.len(), 2);
+    fn public_surface_is_three_tools() {
+        assert_eq!(PUBLIC_TOOLS.len(), 3);
     }
 }

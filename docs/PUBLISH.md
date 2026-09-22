@@ -3,9 +3,10 @@
 | Field | Value |
 | --- | --- |
 | Canonical npm | `@sylphx/cue` |
-| Source tip | `0.2.0` |
-| Deprecated CTA | `@sylphx/video-reader-mcp` |
-| Public tools | `read_video`, `video_evidence` only |
+| Version | `0.3.0` |
+| MCP Registry | `io.github.SylphxAI/cue` |
+| Natives | `@sylphx/cue-<platform>` |
+| Public tools | `read_video`, `search_video`, `video_evidence` |
 
 ```bash
 npm i -g @sylphx/cue
@@ -17,4 +18,5 @@ npm i -g @sylphx/cue
 npx -y @sylphx/cue
 ```
 
-Live **@sylphx/cue@0.2.1**. Bare MCP stdio for agents.
+`@sylphx/cue` is the sole install call to action and exposes bare MCP stdio for
+agents.

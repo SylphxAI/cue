@@ -44,7 +44,7 @@ See [IPPB.md](./IPPB.md).
 
 Cue stays the **local timeline evidence** tool (ffprobe/scenes/subtitles/structural
 keyframes). Via the Cue→Iris compose path (`bun run compose:iris`), structural
-keyframes become **timestamped open-vocab objects** from Iris L2
+keyframes become **timestamped open-vocab objects** from Iris optional semantics
 (`include_semantics`) — no per-frame VLM. Structure in Cue, semantics in Iris.
 
 ## Zero-config CTA

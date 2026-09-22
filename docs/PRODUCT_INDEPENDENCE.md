@@ -1,3 +1,3 @@
 # Product independence — Cue
 
-Brand-sole Instrument `@sylphx/cue`. Prism retired. Family law in skills.
+Brand-sole product `@sylphx/cue`. Prism is not part of the public product surface. Family law in skills.

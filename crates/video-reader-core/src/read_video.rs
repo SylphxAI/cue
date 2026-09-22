@@ -1,7 +1,7 @@
 use std::path::{Path, PathBuf};
 
 use serde::Serialize;
-use serde_json::Value;
+use serde_json::{json, Value};
 
 use crate::envelope::build_read_video_envelope;
 use crate::ffprobe::{is_ffprobe_available, run_ffprobe};
@@ -114,6 +114,87 @@ impl Default for ReadVideoOptions {
     }
 }
 
+fn parse_srt_timestamp(value: &str) -> Option<u64> {
+    let mut parts = value.trim().split(':');
+    let hours: u64 = parts.next()?.parse().ok()?;
+    let minutes: u64 = parts.next()?.parse().ok()?;
+    let seconds_part = parts.next()?;
+    let mut sec_parts = seconds_part.split(',');
+    let seconds: u64 = sec_parts.next()?.parse().ok()?;
+    let millis: u64 = sec_parts.next().unwrap_or("0").parse().ok()?;
+    Some(hours * 3_600_000 + minutes * 60_000 + seconds * 1_000 + millis)
+}
+
+fn extract_subtitles(path: &Path) -> (Vec<Value>, Vec<String>) {
+    let output = std::process::Command::new("ffmpeg")
+        .args(["-hide_banner", "-loglevel", "error", "-i"])
+        .arg(path)
+        .args(["-map", "0:s:0", "-c:s", "srt", "-f", "srt", "-"])
+        .output();
+    let Ok(output) = output else {
+        return (Vec::new(), vec!["Embedded subtitle extraction is unavailable.".into()]);
+    };
+    if !output.status.success() {
+        return (Vec::new(), vec!["No readable embedded subtitle stream was found.".into()]);
+    }
+    let text = String::from_utf8_lossy(&output.stdout);
+    let mut subtitles = Vec::new();
+    for (index, block) in text.split("\n\n").enumerate() {
+        let lines: Vec<&str> = block.lines().collect();
+        if lines.len() < 2 { continue; }
+        let time_line = lines.iter().find(|line| line.contains("-->")).copied().unwrap_or("");
+        let mut times = time_line.split("-->");
+        let start = times.next().and_then(parse_srt_timestamp);
+        let end = times.next().and_then(parse_srt_timestamp);
+        let body = lines.iter().skip_while(|line| !line.contains("-->")).skip(1).cloned().collect::<Vec<_>>().join(" ");
+        if let (Some(start), Some(end), true) = (start, end, !body.trim().is_empty()) {
+            subtitles.push(json!({
+                "index": index,
+                "start_ms": start,
+                "end_ms": end,
+                "text": body.trim(),
+                "provenance": { "method": "ffmpeg_extract", "format": "srt" }
+            }));
+        }
+    }
+    if subtitles.is_empty() {
+        (Vec::new(), vec!["Embedded subtitle stream was empty or unparsable.".into()])
+    } else {
+        (subtitles, Vec::new())
+    }
+}
+
+fn detect_scenes(path: &Path, threshold: f64) -> (Vec<Value>, Vec<String>) {
+    let output = std::process::Command::new("ffmpeg")
+        .args(["-hide_banner", "-loglevel", "info", "-i"])
+        .arg(path)
+        .args(["-vf", &format!("select='gt(scene,{threshold})',showinfo"), "-f", "null", "-"])
+        .output();
+    let Ok(output) = output else {
+        return (Vec::new(), vec!["Scene detection is unavailable.".into()]);
+    };
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    let mut scenes = Vec::new();
+    for (index, segment) in stderr.split("pts_time:").skip(1).enumerate() {
+        let token: String = segment
+            .chars()
+            .take_while(|ch| ch.is_ascii_digit() || *ch == '.')
+            .collect();
+        if let Ok(seconds) = token.parse::<f64>() {
+            scenes.push(json!({
+                "index": index,
+                "time_ms": (seconds * 1000.0).round() as u64,
+                "provenance": { "method": "ffmpeg_scene_filter", "threshold": threshold }
+            }));
+        }
+    }
+    if scenes.is_empty() {
+        (Vec::new(), vec!["No scene boundaries were detected.".into()])
+    } else {
+        (scenes, Vec::new())
+    }
+}
+
 pub fn read_video_source(path: &Path, options: &ReadVideoOptions) -> Result<TimelineDocument, ReadVideoError> {
     if !path.is_file() {
         return Err(ReadVideoError::invalid_request(format!(
@@ -155,16 +236,16 @@ pub fn read_video_source(path: &Path, options: &ReadVideoOptions) -> Result<Time
     );
 
     let mut warnings = assembled.warnings.clone();
-    if options.include_subtitles {
-        warnings.push(
-            "Embedded subtitle extraction is not available on the default Rust read_video route; use VIDEO_READER_MCP_TRANSPORT=ts.".into(),
-        );
-    }
-    if options.include_scenes {
-        warnings.push(
-            "Scene detection is not available on the default Rust read_video route; use VIDEO_READER_MCP_TRANSPORT=ts.".into(),
-        );
-    }
+    let subtitles = if options.include_subtitles {
+        let (subtitles, subtitle_warnings) = extract_subtitles(path);
+        warnings.extend(subtitle_warnings);
+        subtitles
+    } else { Vec::new() };
+    let scenes = if options.include_scenes {
+        let (scenes, scene_warnings) = detect_scenes(path, options.scene_threshold);
+        warnings.extend(scene_warnings);
+        scenes
+    } else { Vec::new() };
     if options.include_transcript {
         warnings.push(
             "ASR transcript extraction is not available on the default Rust read_video route; use VIDEO_READER_MCP_TRANSPORT=ts.".into(),
@@ -189,8 +270,8 @@ pub fn read_video_source(path: &Path, options: &ReadVideoOptions) -> Result<Time
         format: assembled.format,
         streams: assembled.streams,
         chapters: assembled.chapters,
-        scenes: Vec::new(),
-        subtitles: Vec::new(),
+        scenes,
+        subtitles,
         transcript: Vec::new(),
         keyframes: Vec::new(),
         warnings,
@@ -209,6 +290,12 @@ pub fn read_video_from_value(input: &Value) -> Result<ReadVideoResponse, ReadVid
         ));
     }
 
+    let profile = input.get("profile").and_then(Value::as_str).unwrap_or("fast");
+    if !matches!(profile, "fast" | "quality") {
+        return Err(ReadVideoError::invalid_params(
+            "profile must be one of: fast, quality",
+        ));
+    }
     let options = ReadVideoOptions {
         include_streams: input
             .get("include_streams")
@@ -225,7 +312,7 @@ pub fn read_video_from_value(input: &Value) -> Result<ReadVideoResponse, ReadVid
         include_scenes: input
             .get("include_scenes")
             .and_then(Value::as_bool)
-            .unwrap_or(true),
+            .unwrap_or(profile == "quality"),
         include_transcript: input
             .get("include_transcript")
             .and_then(Value::as_bool)
@@ -233,7 +320,7 @@ pub fn read_video_from_value(input: &Value) -> Result<ReadVideoResponse, ReadVid
         include_keyframes: input
             .get("include_keyframes")
             .and_then(Value::as_bool)
-            .unwrap_or(false),
+            .unwrap_or(profile == "quality"),
         include_keyframe_images: input
             .get("include_keyframe_images")
             .and_then(Value::as_bool)
@@ -305,6 +392,51 @@ pub fn read_video_from_value(input: &Value) -> Result<ReadVideoResponse, ReadVid
         results,
         envelope: Some(envelope),
     })
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct VideoSearchResponse {
+    pub profile: &'static str,
+    pub query: String,
+    pub matches: Vec<Value>,
+    pub warnings: Vec<String>,
+    pub gaps: Vec<String>,
+}
+
+pub fn search_video_from_value(input: &Value) -> Result<VideoSearchResponse, ReadVideoError> {
+    let query = input.get("query").and_then(Value::as_str).unwrap_or("").trim().to_lowercase();
+    if query.is_empty() {
+        return Err(ReadVideoError::invalid_params("query must not be empty"));
+    }
+    let mut read_input = input.clone();
+    let obj = read_input.as_object_mut().ok_or_else(|| ReadVideoError::invalid_params("input must be an object"))?;
+    obj.insert("include_subtitles".into(), json!(true));
+    obj.insert("include_transcript".into(), json!(true));
+    obj.entry("sources".to_string()).or_insert(json!([]));
+    let response = read_video_from_value(&read_input)?;
+    let mut matches = Vec::new();
+    let mut warnings = Vec::new();
+    let mut gaps = Vec::new();
+    for result in &response.results {
+        let Some(timeline) = result.timeline.as_ref() else { continue };
+        for subtitle in &timeline.subtitles {
+            let text = subtitle.get("text").and_then(Value::as_str).unwrap_or("");
+            if text.to_lowercase().contains(&query) {
+                matches.push(json!({ "source": result.source, "kind": "subtitle", "text": text, "start_ms": subtitle.get("start_ms"), "end_ms": subtitle.get("end_ms") }));
+            }
+        }
+        for segment in &timeline.transcript {
+            let text = segment.get("text").and_then(Value::as_str).unwrap_or("");
+            if text.to_lowercase().contains(&query) {
+                matches.push(json!({ "source": result.source, "kind": "transcript", "text": text, "start_ms": segment.get("start_ms"), "end_ms": segment.get("end_ms") }));
+            }
+        }
+        warnings.extend(timeline.warnings.iter().cloned());
+    }
+    if matches.is_empty() {
+        gaps.push("No subtitle or transcript match was found; frame-level evidence is available through video_evidence.".into());
+    }
+    Ok(VideoSearchResponse { profile: "video_search_results", query, matches, warnings, gaps })
 }
 
 fn chrono_now_iso() -> String {
