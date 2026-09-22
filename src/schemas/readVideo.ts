@@ -6,6 +6,12 @@ export const videoSourceSchema = z.object({
 
 export const readVideoArgsSchema = z.object({
   sources: z.array(videoSourceSchema).min(1).describe('One or more local video sources to read.'),
+  profile: z
+    .enum(['fast', 'quality'])
+    .optional()
+    .describe(
+      'Predictable work profile. Fast reads timeline/subtitles; quality explicitly enables scenes and keyframes.'
+    ),
   include_streams: z
     .boolean()
     .optional()

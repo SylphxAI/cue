@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.0
+
+- Add `search_video` with timestamped subtitle and transcript matches.
+- Extract embedded subtitles and scene boundaries on the Rust route.
+- Add explicit `fast` and `quality` profiles and refresh Cue documentation.
 ## 0.2.0
 
 ### Breaking

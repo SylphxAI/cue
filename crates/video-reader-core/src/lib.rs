@@ -11,8 +11,8 @@ pub mod video_evidence;
 
 pub use envelope::{build_read_video_envelope, AgentEvidenceEnvelope};
 pub use read_video::{
-    read_video_from_value, read_video_source, ReadVideoError, ReadVideoErrorCode, ReadVideoResponse,
-    READ_VIDEO_ROUTE,
+    read_video_from_value, read_video_source, search_video_from_value, ReadVideoError,
+    ReadVideoErrorCode, ReadVideoResponse, VideoSearchResponse, READ_VIDEO_ROUTE,
 };
 pub use video_evidence::{
     video_evidence_from_value, VideoEvidenceError, VideoEvidenceErrorCode, VideoEvidenceResponse,

@@ -41,12 +41,12 @@ read_video { ..., "include_transcript": true }
 2. Prefer Rust native MCP when present  
 3. Few tools; primary path documented in TOOL_SURFACE.md  
 4. Cloud / LLM only optional and non-authority  
-5. Product SSOT is this repository only (no instruments monorepo)
+5. Product SSOT is this repository only (no products monorepo)
 
-## Composition: Iris L2 on structural keyframes
+## Composition: Iris optional semantics on structural keyframes
 
 Cue owns **timeline structure** (probe, scenes, structural keyframes, subtitles).
-Open-vocab objects / masks / captions belong to **Iris L2 semantics**:
+Open-vocab objects / masks / captions belong to **Iris optional semantics semantics**:
 
 1. `read_video` with structural keyframes  
 2. For each keyframe path, agent calls Iris `read_image` with `include_semantics: true`  
@@ -58,7 +58,7 @@ See Iris `docs/adr/ADR-20260802-iris-l2-local-semantics.md`.
 ### Compose: Cue → Iris semantic timeline
 
 `bun run compose:iris -- /abs/clip.mp4` renders structural keyframes and queries
-Iris L2 (`include_semantics`) per keyframe, emitting timestamped objects.
+Iris optional semantics (`include_semantics`) per keyframe, emitting timestamped objects.
 Structure stays in Cue; semantics stays in Iris. See [compose-iris.md](./compose-iris.md).
 
 ## Zero-config CTA

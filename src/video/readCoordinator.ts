@@ -31,12 +31,13 @@ export const buildTimelineDocument = async (
   args: ReadVideoArgs,
   version: string
 ): Promise<TimelineDocument> => {
+  const profile = args.profile ?? 'fast';
   const includeStreams = args.include_streams ?? true;
   const includeChapters = args.include_chapters ?? true;
   const includeSubtitles = args.include_subtitles ?? true;
-  const includeScenes = args.include_scenes ?? true;
+  const includeScenes = args.include_scenes ?? profile === 'quality';
   const includeTranscript = args.include_transcript ?? false;
-  const includeKeyframes = args.include_keyframes ?? false;
+  const includeKeyframes = args.include_keyframes ?? profile === 'quality';
   const includeKeyframeImages = args.include_keyframe_images ?? false;
   const keyframeLimit = args.keyframe_limit ?? DEFAULT_KEYFRAME_LIMIT;
   const keyframeMaxDimension = args.keyframe_max_dimension;

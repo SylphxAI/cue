@@ -13,7 +13,7 @@ Cue (structure)          Iris (semantics)
 - **Structure in Cue, semantics in Iris, merge by time.**
 - Keyframes are **scene-change architecture** (not an N-second grid).
 - No frame-by-frame vision LLM: only structural samples.
-- Iris L2 is **scored_non_locator** — never overrides OCR/layout in a single image.
+- Iris optional semantics is **scored_non_locator** — never overrides OCR/layout in a single image.
 
 ## Usage
 

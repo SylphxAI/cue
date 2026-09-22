@@ -1,6 +1,6 @@
 # Evidence contract — Cue
 
-Family envelope v1. Locators: `timestamp_ms`, stream indices, subtitle cue ranges, source hash.
+Result contract v1. Locators: `timestamp_ms`, stream indices, subtitle cue ranges, source hash.
 Gaps: missing ffprobe, absent subtitles, optional ASR unavailable.
 No `evidence_first` tool.
 
@@ -14,4 +14,4 @@ Every tool result includes:
 - `warnings` and `gaps` arrays (may be empty)
 - domain payload (often also as top-level twin/results/answer for compatibility)
 
-Schema: `SylphxAI/skills` `schemas/instrument-evidence-envelope.schema.json`.
+Schema: `SylphxAI/skills` `schemas/product-evidence-envelope.schema.json`.
