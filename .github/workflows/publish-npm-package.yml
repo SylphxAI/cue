@@ -51,5 +51,16 @@ jobs:
             npm view "$NAME" version dist-tags --workspaces=false || true
             exit 0
           fi
-          npm publish --access public --workspaces=false
-          npm view "$NAME@$VER" version --workspaces=false
+          npm publish --access public --workspaces=false 2>&1 | tee /tmp/npm-publish.log
+          for i in $(seq 1 60); do
+            if npm view "$NAME@$VER" version --workspaces=false >/dev/null 2>&1; then
+              npm view "$NAME@$VER" version --workspaces=false
+              exit 0
+            fi
+            sleep 5
+          done
+          if grep -q "+ $NAME@$VER" /tmp/npm-publish.log; then
+            echo "publish succeeded; registry view lagged for $NAME@$VER"
+            exit 0
+          fi
+          exit 1
