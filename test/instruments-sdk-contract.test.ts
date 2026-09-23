@@ -27,7 +27,7 @@ describe('Cue Instruments product contract', () => {
     expect(server.name).toBe('io.github.SylphxAI/cue');
     expect(server.packages?.[0]?.identifier).toBe('@sylphx/cue');
     expect(server.description).toBe(
-      'Cue — video answers with timestamp-level proof. Scenes and frames stay off until asked.',
+      'Cue — video answers with timestamp-level proof. Scenes and frames stay off until asked.'
     );
     expect((server.description ?? '').length).toBeLessThanOrEqual(100);
   });
