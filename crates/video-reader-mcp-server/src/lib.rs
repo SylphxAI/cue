@@ -28,12 +28,11 @@ impl FreeformToolArgs {
 
 pub const SERVER_NAME: &str = "cue";
 /// The product version, injected at build time from package.json (see the
-/// `build:rust` script). Falls back to the release this source last shipped so a
-/// plain `cargo build` still compiles. Never hand-edit the fallback except when
-/// cutting a release that does not go through `build:rust`.
+/// crate `build.rs`). `CUE_PRODUCT_VERSION` still overrides that file. The
+/// fallback is only for a build that has neither.
 pub const SERVER_VERSION: &str = match option_env!("CUE_PRODUCT_VERSION") {
     Some(version) => version,
-    None => "0.3.3",
+    None => "0.3.4",
 };
 pub const SERVER_INSTRUCTIONS: &str =
     "Video answers with timestamp-level proof. read_video defaults to profile fast: container metadata, streams, chapters, and embedded subtitles. It does not detect scenes, extract frames, or run speech recognition. profile quality or include_scenes detects scenes. video_evidence renders, crops, or OCRs one frame at a timestamp. No per-frame vision model.";
@@ -141,6 +140,11 @@ mod tests {
         assert_eq!(version, SERVER_VERSION);
         assert_eq!(SERVER_NAME, "cue");
         assert!(!name.contains("video-reader"));
+        let manifest = include_str!("../../../package.json");
+        assert!(
+            manifest.contains(&format!("\"version\": \"{SERVER_VERSION}\"")),
+            "native SERVER_VERSION {SERVER_VERSION} is not the package.json version"
+        );
     }
 
 }
