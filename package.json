@@ -1,6 +1,6 @@
 {
   "name": "@sylphx/cue",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "mcpName": "io.github.SylphxAI/cue",
   "description": "Cue — video answers with timestamp-level proof. Local-first timelines, subtitles, scenes, and frame evidence.",
   "type": "module",
