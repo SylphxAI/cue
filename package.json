@@ -1,6 +1,6 @@
 {
   "name": "@sylphx/cue",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "mcpName": "io.github.SylphxAI/cue",
   "description": "Cue — video answers with timestamp-level proof. Local-first timelines, subtitles, scenes, and frame evidence.",
   "type": "module",
@@ -92,9 +92,9 @@
   "packageManager": "bun@1.4.0",
   "private": false,
   "optionalDependencies": {
-    "@sylphx/cue-darwin-arm64": "0.3.0",
-    "@sylphx/cue-darwin-x64": "0.3.0",
-    "@sylphx/cue-linux-x64-gnu": "0.3.0",
-    "@sylphx/cue-linux-arm64-gnu": "0.3.0"
+    "@sylphx/cue-darwin-arm64": "0.3.2",
+    "@sylphx/cue-darwin-x64": "0.3.2",
+    "@sylphx/cue-linux-x64-gnu": "0.3.2",
+    "@sylphx/cue-linux-arm64-gnu": "0.3.2"
   }
 }
