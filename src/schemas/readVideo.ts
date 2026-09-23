@@ -27,7 +27,7 @@ export const readVideoArgsSchema = z.object({
   include_scenes: z
     .boolean()
     .optional()
-    .describe('Detect scene boundaries with ffmpeg scene filter. Defaults to true.'),
+    .describe('Detect scene boundaries with ffmpeg scene filter. Off unless profile is quality or this flag is set.'),
   scene_threshold: z
     .number()
     .min(0)

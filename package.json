@@ -2,7 +2,7 @@
   "name": "@sylphx/cue",
   "version": "0.3.3",
   "mcpName": "io.github.SylphxAI/cue",
-  "description": "Cue \u2014 video answers with timestamp-level proof. Local-first timelines, subtitles, scenes, and frame evidence.",
+  "description": "Cue \u2014 video answers with timestamp-level proof. The default read returns container metadata, streams, chapters, and embedded subtitles. Scenes and frames are separate.",
   "type": "module",
   "publishConfig": {
     "access": "public"

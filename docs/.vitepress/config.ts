@@ -3,11 +3,13 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'Cue',
   description: 'Video answers with timestamp-level proof',
+  appearance: 'dark',
   head: [
     ['link', { rel: 'canonical', href: 'https://sylphxai.github.io/cue/' }],
+    ['meta', { name: 'theme-color', content: '#120c0a' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:title', content: 'Cue — Video answers with timestamp-level proof' }],
-    ['meta', { property: 'og:description', content: 'Search subtitles and transcripts, inspect timelines, and recover exact frames.' }],
+    ['meta', { property: 'og:description', content: 'The default read returns container metadata, streams, chapters, and embedded subtitles. Scenes and frames are separate.' }],
     ['meta', { property: 'og:url', content: 'https://sylphxai.github.io/cue/' }],
     ['meta', { name: 'twitter:card', content: 'summary' }]
   ],

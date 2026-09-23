@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.SylphxAI/cue",
   "title": "Cue",
-  "description": "Cue — video answers with timestamp-level proof: timelines, subtitles, scenes, and frames.",
+  "description": "Cue — video answers with timestamp-level proof. The default read returns container metadata, streams, chapters, and embedded subtitles. Scenes and frames are separate.",
   "repository": {
     "url": "https://github.com/SylphxAI/cue",
     "source": "github"

@@ -3,7 +3,7 @@ layout: home
 hero:
   name: "Cue"
   text: "Video answers with timestamp-level proof"
-  tagline: "Search subtitles and transcripts, inspect timelines, and recover exact frames."
+  tagline: "Container metadata, streams, chapters, and embedded subtitles. Scenes and frames are separate."
   actions:
     - theme: brand
       text: Quickstart
@@ -15,7 +15,7 @@ features:
   - title: Local-first
     details: The default path keeps source material on your machine and requires no API key.
   - title: Predictable work
-    details: Stream and subtitle probing are the default. Scene detection, OCR, and local ASR are explicit.
+    details: The default read returns container metadata, streams, chapters, and embedded subtitles. Scenes and frames are a separate request. OCR and speech recognition stay off unless you ask for them.
   - title: Citeable output
     details: Results carry source locators, routes, warnings, and gaps so agents can verify claims.
 ---
