@@ -87,7 +87,7 @@ impl ServerHandler for VideoReaderMcp {
                     .with_description(
                         "Rust-native MCP server for Cue (@sylphx/cue) (modelcontextprotocol/rust-sdk rmcp)",
                     )
-                    .with_website_url("https://github.com/SylphxAI/video-reader-mcp"),
+                    .with_website_url("https://sylphxai.github.io/cue/"),
             )
             .with_instructions(SERVER_INSTRUCTIONS)
     }
