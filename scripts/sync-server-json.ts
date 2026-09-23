@@ -32,3 +32,17 @@ server.version = pkg.version;
 server.packages[0].version = pkg.version;
 
 writeFileSync('server.json', `${JSON.stringify(server, null, 2)}\n`);
+
+// Keep the Rust MCP server's advertised version aligned with the product
+// version, so serverInfo never reports a stale release.
+const rustLib = 'crates/video-reader-mcp-server/src/lib.rs';
+try {
+  const raw = readFileSync(rustLib, 'utf8');
+  const next = raw.replace(
+    /(pub const SERVER_VERSION: &str = ")[^"]*(";)/,
+    `$1${pkg.version}$2`,
+  );
+  if (next !== raw) writeFileSync(rustLib, next);
+} catch {
+  // Rust source is not present in every checkout (e.g. npm-only consumers).
+}

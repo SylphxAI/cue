@@ -27,7 +27,7 @@ impl FreeformToolArgs {
 }
 
 pub const SERVER_NAME: &str = "cue";
-pub const SERVER_VERSION: &str = "0.3.0";
+pub const SERVER_VERSION: &str = "0.3.2";
 pub const SERVER_INSTRUCTIONS: &str =
     "Evidence-first video reader MCP server (Rust rmcp transport). Use read_video for ffprobe timelines and video_evidence for render_frame or crop_frame follow-ups without per-frame vision LLM.";
 
