@@ -12,7 +12,7 @@
 
 | Capability | Tool | Evidence |
 | --- | --- | --- |
-| Timeline document | `read_video` | default: streams, chapters, embedded subtitles, agent index. Scenes and keyframes only when requested |
+| Timeline document | `read_video` | default: streams, chapters, embedded subtitles. `quality` or `include_scenes` adds ffmpeg scene boundaries. The shipped server does not extract keyframes |
 | Timestamped search | `search_video` | embedded subtitle matches with timestamps. No speech recognition |
 | Frame evidence | `video_evidence` (`render_frame`, `crop_frame`, `ocr_frame`) | a separate follow-up: frame, crop, and OCR at a known timestamp |
 

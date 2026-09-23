@@ -10,7 +10,7 @@ export const readVideoArgsSchema = z.object({
     .enum(['fast', 'quality'])
     .optional()
     .describe(
-      'Predictable work profile. Fast reads timeline/subtitles; quality explicitly enables scenes and keyframes.'
+      'Predictable work profile. fast returns container metadata, streams, chapters, and embedded subtitles. quality adds ffmpeg scene detection. Neither profile extracts frames or runs speech recognition.'
     ),
   include_streams: z
     .boolean()
@@ -40,13 +40,13 @@ export const readVideoArgsSchema = z.object({
     .boolean()
     .optional()
     .describe(
-      'Attempt optional local ASR transcript when an adapter is installed. Defaults to false.'
+      'Request speech recognition. Defaults to false, including on quality. The shipped Rust server does not run it and returns a warning.'
     ),
   include_keyframes: z
     .boolean()
     .optional()
     .describe(
-      'Index I-frame timestamps with ffmpeg for reproducible frame evidence follow-up. Defaults to false.'
+      'Request keyframe locators. Defaults to false, including on quality. The shipped Rust server does not extract them and returns a warning. A frame is video_evidence.'
     ),
   keyframe_limit: z
     .number()

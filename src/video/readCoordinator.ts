@@ -37,7 +37,7 @@ export const buildTimelineDocument = async (
   const includeSubtitles = args.include_subtitles ?? true;
   const includeScenes = args.include_scenes ?? profile === 'quality';
   const includeTranscript = args.include_transcript ?? false;
-  const includeKeyframes = args.include_keyframes ?? profile === 'quality';
+  const includeKeyframes = args.include_keyframes ?? false;
   const includeKeyframeImages = args.include_keyframe_images ?? false;
   const keyframeLimit = args.keyframe_limit ?? DEFAULT_KEYFRAME_LIMIT;
   const keyframeMaxDimension = args.keyframe_max_dimension;

@@ -21,7 +21,8 @@ Omitted `profile` is `fast`: container metadata, streams, chapters, and embedded
 subtitles. That read does not detect scenes, extract frames, or run speech
 recognition.
 
-Choose `quality` only when scene detection and keyframes are worth the extra
-work. `quality` does not enable OCR or speech recognition. OCR stays on
-`video_evidence`. Speech recognition stays off unless `include_transcript` is
-set.
+Choose `quality`, or set `include_scenes`, only when scene boundaries are worth
+the extra ffmpeg pass. That profile does not extract frames or run speech
+recognition. A frame, crop, or OCR is `video_evidence`. Setting
+`include_keyframes` or `include_transcript` on the shipped server returns a
+warning and empty arrays.
