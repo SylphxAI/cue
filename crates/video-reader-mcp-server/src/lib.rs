@@ -27,7 +27,14 @@ impl FreeformToolArgs {
 }
 
 pub const SERVER_NAME: &str = "cue";
-pub const SERVER_VERSION: &str = "0.3.2";
+/// The product version, injected at build time from package.json (see the
+/// `build:rust` script). Falls back to the release this source last shipped so a
+/// plain `cargo build` still compiles. Never hand-edit the fallback except when
+/// cutting a release that does not go through `build:rust`.
+pub const SERVER_VERSION: &str = match option_env!("CUE_PRODUCT_VERSION") {
+    Some(version) => version,
+    None => "0.3.3",
+};
 pub const SERVER_INSTRUCTIONS: &str =
     "Evidence-first video reader MCP server (Rust rmcp transport). Use read_video for ffprobe timelines and video_evidence for render_frame or crop_frame follow-ups without per-frame vision LLM.";
 

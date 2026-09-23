@@ -2,7 +2,7 @@
   "name": "@sylphx/cue",
   "version": "0.3.3",
   "mcpName": "io.github.SylphxAI/cue",
-  "description": "Cue — video answers with timestamp-level proof. Local-first timelines, subtitles, scenes, and frame evidence.",
+  "description": "Cue \u2014 video answers with timestamp-level proof. Local-first timelines, subtitles, scenes, and frame evidence.",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -53,7 +53,7 @@
     "bun": ">=1.4.0"
   },
   "scripts": {
-    "build:rust": "cargo build --release -p video-reader-core -p video-reader-cli -p video-reader-mcp-server && bun scripts/stage-rust-mcp.ts",
+    "build:rust": "CUE_PRODUCT_VERSION=$(node -p \"require('./package.json').version\") cargo build --release -p video-reader-core -p video-reader-cli -p video-reader-mcp-server && bun scripts/stage-rust-mcp.ts",
     "test:rust": "cargo test",
     "build": "bun build src/doctor-cli.ts --outdir dist --target node && chmod +x dist/doctor-cli.js",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.test.json",
