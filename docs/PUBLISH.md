@@ -3,7 +3,7 @@
 | Field | Value |
 | --- | --- |
 | Canonical npm | `@sylphx/cue` |
-| Version | `0.3.3` |
+| Version | `package.json` `version` |
 | MCP Registry | `io.github.SylphxAI/cue` |
 | Natives | `@sylphx/cue-<platform>` |
 | Public tools | `read_video`, `search_video`, `video_evidence` |
