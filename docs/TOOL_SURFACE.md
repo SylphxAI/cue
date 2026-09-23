@@ -17,4 +17,4 @@
 1. Always `read_video` first.
 2. Structural keyframes only — not N-second grid spam.
 3. No cloud vision/ASR required for success.
-4. Prism is not part of the public product surface — host composes Cue with Iris when needed.
+4. Composition with companion tools is through public MCP and SDK contracts only; the host composes Cue with Iris when needed.

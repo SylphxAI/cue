@@ -20,6 +20,7 @@ export default defineConfig({
       { text: 'npm', link: 'https://www.npmjs.com/package/@sylphx/cue' }
     ],
     sidebar: [
+      { text: 'Product', items: [{ text: 'Vision', link: '/vision' }, { text: 'Capabilities', link: '/capabilities' }] },
       { text: 'Guide', items: [{ text: 'Quickstart', link: '/guide/quickstart' }, { text: 'Predictable defaults', link: '/reference/defaults' }] },
       { text: 'Reference', items: [{ text: 'Tools', link: '/reference/tools' }] }
     ],

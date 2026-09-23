@@ -1,56 +1,11 @@
-# Cue — positioning
+# Positioning — Cue
 
-## One-liner
+**One-liner:** Video answers with timestamp-level proof.
 
-**Cue**: Video timeline evidence for agents — local-first, fast, light, powerful.
+- **User:** an agent that must find a quote, chapter, code demo or visual moment in a local video.
+- **Job:** build a searchable timeline and return timestamped subtitle, scene, frame, crop and OCR evidence.
+- **Promise:** every claim points at a timestamp or stream/frame locator; missing subtitles or ASR are reported as gaps.
+- **Identity:** package `@sylphx/cue`, bin `cue`, MCP `io.github.SylphxAI/cue`, site <https://sylphxai.github.io/cue/>.
+- **Companion tools:** Citra, Iris, Cue, Spine, Locus and Lookout are independent products composed through public MCP and SDK contracts.
 
-## Why agents use this
-
-Local timeline proof: ffprobe, subtitles, scenes, frames/crops with time locators — without frame-by-frame LLM vision.
-
-## Surfaces
-
-| Surface | Role |
-| --- | --- |
-| MCP | Agent tools over stdio |
-| CLI | Human/scriptable brand bin |
-| SDK | Programmatic library for apps and internal dogfood |
-
-## Primary tools
-
-- `read_video`
-- `video_evidence`
-- `render_frame`
-- `crop_frame`
-
-## Evidence
-
-See [EVIDENCE_CONTRACT.md](./EVIDENCE_CONTRACT.md).
-
-## Independence
-
-See [PRODUCT_INDEPENDENCE.md](./PRODUCT_INDEPENDENCE.md).
-
-## Competitive
-
-See [COMPETITIVE.md](./COMPETITIVE.md).
-
-## Completion bar
-
-See [IPPB.md](./IPPB.md).
-
-
-## 2026-08 — timeline + per-scene semantics
-
-Cue stays the **local timeline evidence** tool (ffprobe/scenes/subtitles/structural
-keyframes). Via the Cue→Iris compose path (`bun run compose:iris`), structural
-keyframes become **timestamped open-vocab objects** from Iris optional semantics
-(`include_semantics`) — no per-frame VLM. Structure in Cue, semantics in Iris.
-
-## Zero-config CTA
-
-```bash
-npx -y @sylphx/cue
-```
-
-Live **@sylphx/cue@0.2.1**. Bare MCP stdio for agents.
+See [vision.md](./vision.md) and [capabilities.md](./capabilities.md) for the destination and the owned capabilities. [TOOL_SURFACE.md](./TOOL_SURFACE.md) is the tool policy and [EVIDENCE_CONTRACT.md](./EVIDENCE_CONTRACT.md) is the result contract.
