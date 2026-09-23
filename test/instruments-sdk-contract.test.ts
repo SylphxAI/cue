@@ -20,10 +20,15 @@ describe('Cue Instruments product contract', () => {
     const server = JSON.parse(readFileSync(join(root, 'server.json'), 'utf8')) as {
       title?: string;
       name?: string;
+      description?: string;
       packages?: { identifier?: string }[];
     };
     expect(server.title).toBe('Cue');
     expect(server.name).toBe('io.github.SylphxAI/cue');
     expect(server.packages?.[0]?.identifier).toBe('@sylphx/cue');
+    expect(server.description).toBe(
+      'Cue — video answers with timestamp-level proof. Scenes and frames stay off until asked.',
+    );
+    expect((server.description ?? '').length).toBeLessThanOrEqual(100);
   });
 });
