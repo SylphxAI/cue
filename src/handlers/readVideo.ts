@@ -7,7 +7,7 @@ const MAX_CONCURRENT_SOURCES = 2;
 export const createReadVideoHandler = (version: string) =>
   tool()
     .description(
-      'Primary video reader for agents (read film structure, not sample frames blindly). Timeline: streams, scenes, subtitles, optional ASR, structural keyframe locators, agent_index outline. Local-first; no required vision LLM.'
+      'Read a local video timeline. The default fast profile returns container metadata, streams, chapters, and embedded subtitles. It does not detect scenes, extract frames, or run speech recognition. Set profile to quality, or set include_scenes, for scene boundaries. Use video_evidence for a frame. No per-frame vision model.'
     )
     .input(readVideoArgsSchema)
     .handler(async ({ input }: { input: ReadVideoArgs }) => {

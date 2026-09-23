@@ -205,7 +205,7 @@ pub fn read_video_source(path: &Path, options: &ReadVideoOptions) -> Result<Time
 
     if !is_ffprobe_available() {
         return Err(ReadVideoError::invalid_request(
-            "ffprobe is unavailable on the default Rust read_video route. Install ffmpeg/ffprobe or use VIDEO_READER_MCP_TRANSPORT=ts.",
+            "ffprobe is unavailable on the shipped Rust read_video route. Install ffmpeg, which provides ffprobe.",
         ));
     }
 
@@ -248,12 +248,12 @@ pub fn read_video_source(path: &Path, options: &ReadVideoOptions) -> Result<Time
     } else { Vec::new() };
     if options.include_transcript {
         warnings.push(
-            "ASR transcript extraction is not available on the default Rust read_video route; use VIDEO_READER_MCP_TRANSPORT=ts.".into(),
+            "ASR transcript extraction is not available on the shipped Rust server.".into(),
         );
     }
     if options.include_keyframes {
         warnings.push(
-            "Keyframe extraction is not available on the default Rust read_video route; use VIDEO_READER_MCP_TRANSPORT=ts or video_evidence.".into(),
+            "Keyframe extraction is not available on the shipped Rust server. Use video_evidence to render, crop, or OCR one frame.".into(),
         );
     }
 
@@ -320,7 +320,7 @@ pub fn read_video_from_value(input: &Value) -> Result<ReadVideoResponse, ReadVid
         include_keyframes: input
             .get("include_keyframes")
             .and_then(Value::as_bool)
-            .unwrap_or(profile == "quality"),
+            .unwrap_or(false),
         include_keyframe_images: input
             .get("include_keyframe_images")
             .and_then(Value::as_bool)
@@ -411,7 +411,6 @@ pub fn search_video_from_value(input: &Value) -> Result<VideoSearchResponse, Rea
     let mut read_input = input.clone();
     let obj = read_input.as_object_mut().ok_or_else(|| ReadVideoError::invalid_params("input must be an object"))?;
     obj.insert("include_subtitles".into(), json!(true));
-    obj.insert("include_transcript".into(), json!(true));
     obj.entry("sources".to_string()).or_insert(json!([]));
     let response = read_video_from_value(&read_input)?;
     let mut matches = Vec::new();
@@ -472,5 +471,87 @@ mod tests {
         let timeline = result.timeline.as_ref().expect("timeline");
         assert_eq!(timeline.provenance.assembly_route, TIMELINE_ROUTE);
         assert_eq!(timeline.provenance.source_hash.len(), 64);
+    }
+
+    fn tiny_mp4() -> Option<PathBuf> {
+        if !is_ffprobe_available() {
+            return None;
+        }
+        let path = std::env::temp_dir().join(format!("cue-fast-profile-{}.mp4", std::process::id()));
+        let status = std::process::Command::new("ffmpeg")
+            .args([
+                "-hide_banner",
+                "-loglevel",
+                "error",
+                "-y",
+                "-f",
+                "lavfi",
+                "-i",
+                "color=c=blue:s=160x120:d=1",
+                "-c:v",
+                "libx264",
+                "-pix_fmt",
+                "yuv420p",
+            ])
+            .arg(&path)
+            .status()
+            .ok()?;
+        if status.success() && path.is_file() {
+            Some(path)
+        } else {
+            None
+        }
+    }
+
+    #[test]
+    fn quality_detects_scenes_only_and_search_does_not_request_asr() {
+        let Some(fixture) = tiny_mp4() else {
+            return;
+        };
+
+        let quality = read_video_from_value(&serde_json::json!({
+            "sources": [{ "path": fixture }],
+            "profile": "quality",
+            "include_scenes": false
+        }))
+        .expect("quality read");
+        let quality_timeline = quality.results[0].timeline.as_ref().expect("timeline");
+        assert!(
+            quality_timeline
+                .warnings
+                .iter()
+                .all(|warning| !warning.contains("Keyframe") && !warning.contains("ASR")),
+            "quality must not request keyframes or speech recognition: {:?}",
+            quality_timeline.warnings
+        );
+
+        let frames = read_video_from_value(&serde_json::json!({
+            "sources": [{ "path": fixture }],
+            "include_keyframes": true,
+            "include_scenes": false,
+            "include_subtitles": false
+        }))
+        .expect("keyframe read");
+        let frame_warnings = &frames.results[0].timeline.as_ref().expect("timeline").warnings;
+        assert!(
+            frame_warnings
+                .iter()
+                .any(|warning| warning.contains("Keyframe extraction is not available")),
+            "{frame_warnings:?}"
+        );
+
+        let search = search_video_from_value(&serde_json::json!({
+            "sources": [{ "path": fixture }],
+            "query": "zzz-no-such-cue",
+            "include_scenes": false
+        }))
+        .expect("search");
+        assert!(
+            search.warnings.iter().all(|warning| !warning.contains("ASR")),
+            "search must not force a transcript: {:?}",
+            search.warnings
+        );
+
+        let _ = std::fs::remove_file(fixture);
     }
 }

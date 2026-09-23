@@ -3,6 +3,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'Cue',
   description: 'Video answers with timestamp-level proof',
+  base: '/cue/',
   appearance: 'dark',
   head: [
     ['link', { rel: 'canonical', href: 'https://sylphxai.github.io/cue/' }],

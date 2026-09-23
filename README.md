@@ -58,8 +58,8 @@ you have a timestamp.
 ## Predictable defaults
 
 - Omitted `profile` is `fast`: container metadata, streams, chapters, and embedded subtitles. No scenes, frames, or speech recognition.
-- `profile` `quality` sets scene detection and keyframes only. It does not enable OCR or speech recognition.
-- `include_transcript` stays off unless the caller sets it, including on `quality`.
+- `profile` `quality` adds ffmpeg scene detection. It does not extract frames or run speech recognition.
+- `include_keyframes` and `include_transcript` stay off. Setting either one on the shipped server returns a warning and an empty array.
 - OCR stays on `video_evidence`.
 - No cloud video API or frame-by-frame vision model is required.
 - Missing ffprobe or embedded subtitles is reported as a gap, not guessed around.
@@ -67,9 +67,7 @@ you have a timestamp.
 ## Why agents trust it
 
 Every claim can point back to `timestamp_ms`, a stream index, a subtitle range,
-or the source hash. A frame index is present only after `video_evidence`. When
-keyframes are requested, structural keyframes are preferred over sampling every
-frame.
+or the source hash. A frame index is present only after `video_evidence`.
 
 ## Companion MCP tools
 
