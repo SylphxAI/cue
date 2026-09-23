@@ -12,14 +12,14 @@
 
 | Capability | Tool | Evidence |
 | --- | --- | --- |
-| Timeline document | `read_video` | streams, chapters, subtitles, structural scenes/keyframes, agent index |
-| Timestamped search | `search_video` | subtitle/transcript matches with timestamps |
-| Frame evidence | `video_evidence` (`render_frame`, `crop_frame`, `ocr_frame`) | frame, crop and OCR evidence at a known timestamp |
+| Timeline document | `read_video` | default: streams, chapters, embedded subtitles, agent index. Scenes and keyframes only when requested |
+| Timestamped search | `search_video` | embedded subtitle matches with timestamps. No speech recognition |
+| Frame evidence | `video_evidence` (`render_frame`, `crop_frame`, `ocr_frame`) | a separate follow-up: frame, crop, and OCR at a known timestamp |
 
 ## Evidence contract
 
-Every result carries `timestamp_ms`, stream/subtitle/frame locators, source hash, route, warnings and gaps. See [EVIDENCE_CONTRACT.md](./EVIDENCE_CONTRACT.md).
+Every result carries `timestamp_ms`, stream or subtitle locators, source hash, route, warnings and gaps. A frame locator is present only after a frame follow-up. See [EVIDENCE_CONTRACT.md](./EVIDENCE_CONTRACT.md).
 
 ## Not owned
 
-Cloud video or ASR APIs as a requirement, per-frame vision summaries, media-library management, and still-image semantics.
+Cloud video or speech-recognition APIs as a requirement, per-frame vision summaries, media-library management, and still-image semantics.

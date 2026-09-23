@@ -1,15 +1,20 @@
 # Cue → Iris composition (local semantic video timeline)
 
+This is an explicit CLI composition, not the default `read_video`. Scenes and
+keyframes are not the default read.
+
 One-command local pipeline that gives an agent **timestamped object evidence**
-from a video — without per-frame VLM.
+from a video — without per-frame VLM. It detects scenes and renders structural
+keyframes only because this command asks for them.
 
 ```text
-Cue (structure)          Iris (semantics)
+Cue (explicit structure)     Iris (semantics)
   detect scenes   ──►  structural keyframes  ──►  read_image include_semantics  ──►  objects + time
 ```
 
 ## Principles
 
+- **Not the default read.** A normal `read_video` returns container metadata, streams, chapters, and embedded subtitles. This pipeline turns scene detection and keyframes on.
 - **Structure in Cue, semantics in Iris, merge by time.**
 - Keyframes are **scene-change architecture** (not an N-second grid).
 - No frame-by-frame vision LLM: only structural samples.
@@ -18,12 +23,10 @@ Cue (structure)          Iris (semantics)
 ## Usage
 
 Requirements: `ffmpeg`/`ffprobe` on PATH, plus an Iris semantics backend
-(`IRIS_SEMANTICS_URL` pointing at the sidecar at
-`image-reader-mcp/examples/florence-sidecar/` or a compatible adapter; or any
-Iris `read_image { include_semantics: true }` backend).
+(`IRIS_SEMANTICS_URL` pointing at a compatible adapter, or any
+Iris `read_image` call with `include_semantics: true`).
 
 ```bash
-cd /abs/video-reader-mcp
 bun install
 IRIS_SEMANTICS_URL=http://127.0.0.1:8765 \
 bun run compose:iris -- /abs/clip.mp4 [--limit 8] [--prompt "animals"] [--out composed_objects.json]
@@ -55,7 +58,7 @@ bun run compose:iris -- /abs/clip.mp4 [--limit 8] [--prompt "animals"] [--out co
 - If ffmpeg or the semantics backend is missing, each frame fails closed with
   `semantics_available:false` + `skipped_reason`, and the process exits non-zero
   when any keyframe failed. No empty-guess objects are fabricated.
-- This composition is a **CLI/agent path**, not a new Cue MCP tool.
+- This composition is a **CLI/agent path**, not a new Cue MCP tool, and not the default `read_video`.
 
 ## Tests
 

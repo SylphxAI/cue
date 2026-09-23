@@ -2,6 +2,8 @@
 
 `read_video`, `search_video`, `video_evidence`
 
+The default `read_video` profile is `fast`: container metadata, streams, chapters, and embedded subtitles. It does not detect scenes, extract frames, or run speech recognition.
+
 Each result keeps source locators, an extraction route, warnings, and explicit gaps.
 Start with the smallest tool that answers the question; use advanced evidence or
 research operations only when the primary result is insufficient.

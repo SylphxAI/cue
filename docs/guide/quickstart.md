@@ -17,5 +17,11 @@ and gaps before relying on the answer.
 
 ## Predictable defaults
 
-`fast` probes streams and embedded subtitles. Choose `quality` only when scene
-detection, structural keyframes, OCR, or local ASR are worth the extra work.
+Omitted `profile` is `fast`: container metadata, streams, chapters, and embedded
+subtitles. That read does not detect scenes, extract frames, or run speech
+recognition.
+
+Choose `quality` only when scene detection and keyframes are worth the extra
+work. `quality` does not enable OCR or speech recognition. OCR stays on
+`video_evidence`. Speech recognition stays off unless `include_transcript` is
+set.

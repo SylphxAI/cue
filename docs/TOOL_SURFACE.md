@@ -4,9 +4,9 @@
 
 | Tool | Role |
 | --- | --- |
-| `read_video` | Timeline document: ffprobe, subtitles, structural scenes/keyframes, agent_index |
-| `search_video` | Timestamped subtitle and transcript matches |
-| `video_evidence` | Follow-up ops via `op`: `render_frame` \| `crop_frame` \| `ocr_frame` |
+| `read_video` | Default `fast` profile: container metadata, streams, chapters, embedded subtitles, and `agent_index`. Scenes and keyframes only when `profile` is `quality` or the matching flag is set |
+| `search_video` | Timestamped matches in embedded subtitles. Transcript matches only when a transcript is already present. Does not run speech recognition |
+| `video_evidence` | Named follow-up, not part of the default read. `op`: `render_frame` \| `crop_frame` \| `ocr_frame` |
 
 ## Not in tools/list
 
@@ -15,6 +15,7 @@
 ## Rules
 
 1. Always `read_video` first.
-2. Structural keyframes only — not N-second grid spam.
-3. No cloud vision/ASR required for success.
-4. Composition with companion tools is through public MCP and SDK contracts only; the host composes Cue with Iris when needed.
+2. The default read does not detect scenes, extract frames, or run speech recognition.
+3. Keyframes, when requested, are structural — not an N-second grid.
+4. No cloud vision or speech recognition is required for the default read to succeed.
+5. Composition with companion tools is through public MCP and SDK contracts only; the host composes Cue with Iris when needed.

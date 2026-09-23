@@ -2,8 +2,9 @@
 
 ### Video answers with timestamp-level proof
 
-Cue gives agents a local video timeline they can search and cite: streams,
-chapters, subtitles, scenes, frames, and exact timestamps.
+Cue gives agents a local video timeline they can search and cite. The default
+read returns container metadata, streams, chapters, and embedded subtitles.
+Scenes and frames are separate.
 
 ```bash
 npx -y @sylphx/cue
@@ -15,52 +16,60 @@ For Claude Code:
 claude mcp add cue -- npx -y @sylphx/cue
 ```
 
-## The fastest useful workflow
+## Read a local video
 
 ```json
 {
-  "sources": [{ "path": "/absolute/path/to/demo.mp4" }],
-  "include_subtitles": true
+  "sources": [{ "path": "/absolute/path/to/demo.mp4" }]
 }
 ```
 
+That call uses the `fast` profile. It returns container metadata, streams,
+chapters, and embedded subtitles. It does not detect scenes, extract frames,
+or run speech recognition.
+
 Then ask:
 
-> “Find the moment where the presenter explains the pricing change.”
+> “Which chapter covers the pricing change?”
 
-Cue returns the matching timestamp, surrounding transcript, source hash, and
-a route to render or crop the exact frame.
+Cue returns chapter and subtitle locators with `timestamp_ms` and the source
+hash. It does not invent a transcript. A quote search matches embedded
+subtitles only. Render or crop a frame afterwards with `video_evidence`, once
+you have a timestamp.
 
 ## Jobs Cue is built for
 
 | Ask your agent | Cue returns |
 | --- | --- |
-| “Find this quote.” | timestamped transcript evidence |
-| “Summarize this meeting.” | chapters and subtitle-backed notes |
-| “Where is the code shown?” | timestamped frame and crop evidence |
-| “What changed in this demo?” | timeline and structural scene boundaries |
-| “Give me the useful moments.” | compact timeline with warnings and gaps |
+| “Find this quote.” | a timestamped match in embedded subtitles, when those subtitles exist |
+| “Summarize this meeting.” | chapters and embedded subtitles |
+| “Where is the code shown?” | one frame from `video_evidence` at a known timestamp |
+| “What changed in this demo?” | scene boundaries when `profile` is `quality` or `include_scenes` is set |
+| “Give me the useful moments.” | chapters, embedded subtitles, warnings, and gaps |
 
 ## Tool surface
 
 | Tool | Purpose |
 | --- | --- |
-| `read_video` | Build a local timeline from streams, subtitles, scenes, and keyframes |
-| `search_video` | Search subtitles/transcripts and return timestamped matches |
-| `video_evidence` | Render, crop, or OCR a frame at a known timestamp |
+| `read_video` | Default `fast` profile: container metadata, streams, chapters, and embedded subtitles. Scenes are opt-in. |
+| `search_video` | Search embedded subtitle cues. It does not run speech recognition. |
+| `video_evidence` | Named follow-up: render, crop, or OCR one frame at a timestamp |
 
 ## Predictable defaults
 
-- `fast` probes streams and reads embedded metadata/subtitles.
-- `quality` explicitly requests scene detection, keyframes, OCR, or local ASR.
+- Omitted `profile` is `fast`: container metadata, streams, chapters, and embedded subtitles. No scenes, frames, or speech recognition.
+- `profile` `quality` sets scene detection and keyframes only. It does not enable OCR or speech recognition.
+- `include_transcript` stays off unless the caller sets it, including on `quality`.
+- OCR stays on `video_evidence`.
 - No cloud video API or frame-by-frame vision model is required.
-- Missing ffprobe, subtitles, or ASR is reported as a gap, not guessed around.
+- Missing ffprobe or embedded subtitles is reported as a gap, not guessed around.
 
 ## Why agents trust it
 
-Every claim can point back to `timestamp_ms`, stream index, subtitle range,
-frame index, or source hash. Structural keyframes are preferred over sampling
-every frame.
+Every claim can point back to `timestamp_ms`, a stream index, a subtitle range,
+or the source hash. A frame index is present only after `video_evidence`. When
+keyframes are requested, structural keyframes are preferred over sampling every
+frame.
 
 ## Companion MCP tools
 

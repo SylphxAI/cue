@@ -13,4 +13,3 @@ This repository is complete for the company programme only when all are true:
 9. **Packaging** — npm package published **or** explicit external publish blocker + git install path
 10. **Clean** — no archived family package deps; no misleading family SSOT docs
 
-Stars (e.g. 10k) are growth outcomes, not substitutes for the bar above.

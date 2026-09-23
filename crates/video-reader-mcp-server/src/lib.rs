@@ -36,7 +36,7 @@ pub const SERVER_VERSION: &str = match option_env!("CUE_PRODUCT_VERSION") {
     None => "0.3.3",
 };
 pub const SERVER_INSTRUCTIONS: &str =
-    "Evidence-first video reader MCP server (Rust rmcp transport). Use read_video for ffprobe timelines and video_evidence for render_frame or crop_frame follow-ups without per-frame vision LLM.";
+    "Video answers with timestamp-level proof. read_video defaults to profile fast: container metadata, streams, chapters, and embedded subtitles. It does not detect scenes, extract frames, or run speech recognition. profile quality or include_scenes detects scenes. video_evidence renders, crops, or OCRs one frame at a timestamp. No per-frame vision model.";
 
 #[derive(Clone)]
 pub struct VideoReaderMcp {
@@ -54,7 +54,7 @@ impl VideoReaderMcp {
 #[tool_router]
 impl VideoReaderMcp {
     #[tool(
-        description = "Primary video reader. Returns a timeline document with ffprobe metadata, embedded subtitles, optional scene boundaries, and warnings — no per-frame vision LLM."
+        description = "Read a local video timeline. The default fast profile returns container metadata, streams, chapters, and embedded subtitles. It does not detect scenes, extract frames, or run speech recognition. Set profile to quality, or set include_scenes, for scene boundaries. Use video_evidence for a frame. No per-frame vision model."
     )]
     fn read_video(
         &self,
@@ -64,7 +64,7 @@ impl VideoReaderMcp {
     }
 
     #[tool(
-        description = "Search embedded subtitles and transcripts and return timestamped matches."
+        description = "Search embedded subtitle cues and return timestamped matches. Transcript matches are included only when a transcript is already present. This tool does not run speech recognition."
     )]
     fn search_video(
         &self,
@@ -74,7 +74,7 @@ impl VideoReaderMcp {
     }
 
     #[tool(
-        description = "Runs focused video evidence follow-up operations: render_frame, crop_frame, or ocr_frame with timestamp locators after read_video."
+        description = "Named follow-up after read_video, not part of the default read. render_frame, crop_frame, or ocr_frame at a timestamp."
     )]
     fn video_evidence(
         &self,
@@ -110,6 +110,24 @@ mod tests {
         assert!(names.contains(&"read_video".to_string()));
         assert!(names.contains(&"video_evidence".to_string()));
         assert!(names.contains(&"search_video".to_string()));
+    }
+
+    #[test]
+    fn read_video_tool_text_keeps_scenes_off_the_default_call() {
+        let tools = VideoReaderMcp::new().tool_router.list_all();
+        let read_video = tools
+            .iter()
+            .find(|tool| tool.name == "read_video")
+            .expect("read_video");
+        let description = read_video.description.as_deref().unwrap_or("");
+        assert!(description.contains("default fast profile"));
+        assert!(description.contains("does not detect scenes"));
+        let search = tools
+            .iter()
+            .find(|tool| tool.name == "search_video")
+            .expect("search_video");
+        let search_description = search.description.as_deref().unwrap_or("");
+        assert!(search_description.contains("does not run speech recognition"));
     }
 
     #[test]
