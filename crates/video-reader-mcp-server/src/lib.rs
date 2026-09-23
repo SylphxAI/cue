@@ -32,7 +32,7 @@ pub const SERVER_NAME: &str = "cue";
 /// fallback is only for a build that has neither.
 pub const SERVER_VERSION: &str = match option_env!("CUE_PRODUCT_VERSION") {
     Some(version) => version,
-    None => "0.3.4",
+    None => "0.3.5",
 };
 pub const SERVER_INSTRUCTIONS: &str =
     "Video answers with timestamp-level proof. read_video defaults to profile fast: container metadata, streams, chapters, and embedded subtitles. It does not detect scenes, extract frames, or run speech recognition. profile quality or include_scenes detects scenes. video_evidence renders, crops, or OCRs one frame at a timestamp. No per-frame vision model.";

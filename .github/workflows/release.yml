@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - main
+    # A version bump touches package.json, so it still releases. Docs, the
+    # README, and a lockfile refresh after natives exist do not.
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+      - 'bun.lock'
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 

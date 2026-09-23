@@ -15,7 +15,7 @@ const pkg = JSON.parse(readFileSync(pkgPath, 'utf8')) as Pkg;
 if (pkg.optionalDependencies) {
   let changed = false;
   for (const name of Object.keys(pkg.optionalDependencies)) {
-    if (name.startsWith('@sylphx/cue-')) {
+    if (name.startsWith('@sylphx/cue-') && pkg.optionalDependencies[name] !== pkg.version) {
       pkg.optionalDependencies[name] = pkg.version;
       changed = true;
     }
@@ -40,6 +40,9 @@ try {
   const raw = readFileSync(rustLib, 'utf8');
   const next = raw.replace(
     /(pub const SERVER_VERSION: &str = ")[^"]*(";)/,
+    `$1${pkg.version}$2`,
+  ).replace(
+    /(None => ")[0-9][^"]*(")/,
     `$1${pkg.version}$2`,
   );
   if (next !== raw) writeFileSync(rustLib, next);
