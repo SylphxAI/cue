@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.4
+
+### Patch Changes
+
+- 4bfa0f3: The default `read_video` profile is fast: container metadata, streams, chapters, and embedded subtitles. Scenes, frames, OCR, and speech recognition stay off unless a caller asks for them, and the public docs say so.
+
 ## 0.3.1
 
 ### Patch Changes

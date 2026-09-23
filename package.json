@@ -1,8 +1,8 @@
 {
   "name": "@sylphx/cue",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "mcpName": "io.github.SylphxAI/cue",
-  "description": "Cue \u2014 video answers with timestamp-level proof. The default read returns container metadata, streams, chapters, and embedded subtitles. Scenes and frames are separate.",
+  "description": "Cue — video answers with timestamp-level proof. The default read returns container metadata, streams, chapters, and embedded subtitles. Scenes and frames are separate.",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -92,9 +92,9 @@
   "packageManager": "bun@1.4.0",
   "private": false,
   "optionalDependencies": {
-    "@sylphx/cue-darwin-arm64": "0.3.3",
-    "@sylphx/cue-darwin-x64": "0.3.3",
-    "@sylphx/cue-linux-x64-gnu": "0.3.3",
-    "@sylphx/cue-linux-arm64-gnu": "0.3.3"
+    "@sylphx/cue-darwin-arm64": "0.3.4",
+    "@sylphx/cue-darwin-x64": "0.3.4",
+    "@sylphx/cue-linux-x64-gnu": "0.3.4",
+    "@sylphx/cue-linux-arm64-gnu": "0.3.4"
   }
 }
