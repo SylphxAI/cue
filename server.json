@@ -7,13 +7,13 @@
     "url": "https://github.com/SylphxAI/cue",
     "source": "github"
   },
-  "version": "0.3.4",
+  "version": "0.3.5",
   "websiteUrl": "https://sylphxai.github.io/cue/",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@sylphx/cue",
-      "version": "0.3.4",
+      "version": "0.3.5",
       "transport": {
         "type": "stdio"
       }
