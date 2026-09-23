@@ -1,6 +1,6 @@
 {
   "name": "@sylphx/cue",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "mcpName": "io.github.SylphxAI/cue",
   "description": "Cue — video answers with timestamp-level proof. The default read returns container metadata, streams, chapters, and embedded subtitles. Scenes and frames are separate.",
   "type": "module",
@@ -33,7 +33,6 @@
     "video",
     "video-analysis",
     "video-search",
-    "transcription",
     "subtitles",
     "chapters",
     "scenes",
@@ -62,7 +61,7 @@
     "check": "biome check .",
     "check:fix": "biome check --write .",
     "sync:server-json": "bun scripts/sync-server-json.ts",
-    "version-packages": "changeset version && bun run sync:server-json",
+    "version-packages": "changeset version && bun run sync:server-json && bun install",
     "start": "./bin/cue",
     "clean": "rm -rf dist coverage",
     "prepublishOnly": "bun run clean && bun run build && bun run build:rust",
@@ -92,9 +91,9 @@
   "packageManager": "bun@1.4.0",
   "private": false,
   "optionalDependencies": {
-    "@sylphx/cue-darwin-arm64": "0.3.4",
-    "@sylphx/cue-darwin-x64": "0.3.4",
-    "@sylphx/cue-linux-x64-gnu": "0.3.4",
-    "@sylphx/cue-linux-arm64-gnu": "0.3.4"
+    "@sylphx/cue-darwin-arm64": "0.3.5",
+    "@sylphx/cue-darwin-x64": "0.3.5",
+    "@sylphx/cue-linux-x64-gnu": "0.3.5",
+    "@sylphx/cue-linux-arm64-gnu": "0.3.5"
   }
 }
