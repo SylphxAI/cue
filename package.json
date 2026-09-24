@@ -84,7 +84,7 @@
     "@changesets/changelog-github": "^0.7.0",
     "@changesets/cli": "^2.31.0",
     "@types/bun": "^1.2.19",
-    "@types/node": "^25.9.1",
+    "@types/node": "^26.0.0",
     "typescript": "^7.0.2",
     "vitepress": "1.6.4"
   },
