@@ -21,7 +21,7 @@ concurrency:
 jobs:
   validate:
     name: Validate
-    runs-on: sylphx-linux-standard
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.0
       - name: Enforce owned CI runner profiles

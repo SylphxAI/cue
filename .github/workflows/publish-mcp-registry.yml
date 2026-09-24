@@ -22,7 +22,7 @@ permissions:
 jobs:
   publish:
     name: Publish MCP Registry metadata
-    runs-on: sylphx-linux-standard
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7.0.0
