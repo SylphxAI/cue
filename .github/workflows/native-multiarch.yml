@@ -20,7 +20,7 @@ permissions:
 jobs:
   build-darwin-arm64:
     name: Build darwin-arm64
-    runs-on: [self-hosted, sylphx, macos, standard]
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -46,7 +46,7 @@ jobs:
 
   build-darwin-x64:
     name: Build darwin-x64
-    runs-on: [self-hosted, sylphx, macos, standard]
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -72,7 +72,7 @@ jobs:
 
   build-linux-x64:
     name: Build linux-x64-gnu
-    runs-on: sylphx-linux-standard
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -103,7 +103,7 @@ jobs:
 
   build-linux-arm64:
     name: Build linux-arm64-gnu (zig cross)
-    runs-on: sylphx-linux-standard
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -139,7 +139,7 @@ jobs:
   publish:
     needs: [build-darwin-arm64, build-darwin-x64, build-linux-x64, build-linux-arm64]
     if: github.event_name == 'workflow_dispatch' && !cancelled() && needs.build-darwin-arm64.result != 'cancelled' && needs.build-darwin-x64.result != 'cancelled' && needs.build-linux-x64.result != 'cancelled' && needs.build-linux-arm64.result != 'cancelled'
-    runs-on: sylphx-linux-standard
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

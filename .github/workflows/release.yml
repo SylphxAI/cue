@@ -20,7 +20,7 @@ permissions:
 jobs:
   release:
     name: Release
-    runs-on: sylphx-linux-standard
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7.0.0
